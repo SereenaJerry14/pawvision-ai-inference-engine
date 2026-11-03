@@ -74,7 +74,6 @@ pip install -r requirements.txt
    ```
 3. Open your browser at:
    - **Web Studio UI**: [http://127.0.0.1:8000](http://127.0.0.1:8000)
-   - **Swagger API Docs**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ---
 

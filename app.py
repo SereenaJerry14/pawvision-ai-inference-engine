@@ -53,6 +53,9 @@ app = FastAPI(
     description="Upload an image to classify whether it is a Cat or a Dog using PyTorch BasicCNN.",
     version="1.0.0",
     lifespan=lifespan,
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
 )
 
 app.add_middleware(

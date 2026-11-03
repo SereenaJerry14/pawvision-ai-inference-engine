@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PawVision AI — Cat & Dog Recognition Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.78);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #f97316;
+      --accent-secondary: #8b5cf6;
+      --cat-primary: #f43f5e;
+      --cat-secondary: #fb923c;
+      --dog-primary: #3b82f6;
+      --dog-secondary: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(at 15% 15%, rgba(249, 115, 22, 0.16) 0px, transparent 45%),
+        radial-gradient(at 85% 20%, rgba(139, 92, 246, 0.18) 0px, transparent 45%),
+        radial-gradient(at 50% 85%, rgba(244, 63, 94, 0.12) 0px, transparent 50%);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1.25rem 3rem;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Subtle floating paw prints background decoration */
+    .bg-paws {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-4.5-2.5C6.67 7.5 6 8.17 6 9s.67 1.5 1.5 1.5S9 9.83 9 9s-.67-1.5-1.5-1.5zm9 0c-.83 0-1.5.67-1.5 1.5S15.67 10.5 16.5 10.5 18 9.83 18 9s-.67-1.5-1.5-1.5zM9.5 5C8.67 5 8 5.67 8 6.5S8.67 8 9.5 8 11 7.33 11 6.5 10.33 5 9.5 5zm5 0c-.83 0-1.5.67-1.5 1.5S13.67 8 14.5 8 16 7.33 16 6.5 15.33 5 14.5 5zM12 13.5c-2.33 0-4.32 1.45-5.12 3.5h10.24c-.8-2.05-2.79-3.5-5.12-3.5z'/%3E%3C/svg%3E");
+    }
+
+    /* Top Navbar / Header */
+    .navbar {
+      width: 100%;
+      max-width: 1080px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      z-index: 1;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f97316, #ec4899);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      box-shadow: 0 8px 20px -4px rgba(249, 115, 22, 0.5);
+    }
+
+    .brand-text h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      background: linear-gradient(90deg, #fff 0%, #fed7aa 50%, #f9a8d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.95rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--card-border);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      backdrop-filter: blur(10px);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 10px var(--success);
+    }
+
+    .status-dot.warn {
+      background: var(--warning);
+      box-shadow: 0 0 10px var(--warning);
+    }
+
+    /* Main Grid Layout */
+    .main-grid {
+      width: 100%;
+      max-width: 1080px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 1.75rem;
+      z-index: 1;
+    }
+
+    @media (max-width: 860px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 1.75rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #f1f5f9;
+    }
+
+    .card-title span.sub {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+    }
+
+    /* Upload Dropzone */
+    .dropzone {
+      border: 2px dashed rgba(249, 115, 22, 0.4);
+      border-radius: 20px;
+      padding: 2.2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.5) 0%, rgba(15, 23, 42, 0.8) 100%);
+      position: relative;
+      overflow: hidden;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dropzone:hover,
+    .dropzone.dragover {
+      border-color: #f97316;
+      background: rgba(249, 115, 22, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .mascot-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mascot-bubble {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .mascot-bubble.cat {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      transform: rotate(-6deg);
+    }
+
+    .mascot-bubble.dog {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      transform: rotate(6deg);
+    }
+
+    .dropzone:hover .mascot-bubble.cat {
+      transform: rotate(-12deg) scale(1.08);
+    }
+
+    .dropzone:hover .mascot-bubble.dog {
+      transform: rotate(12deg) scale(1.08);
+    }
+
+    .dropzone h3 {
+      font-size: 1.08rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .dropzone p {
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+    }
+
+    .browse-highlight {
+      color: #fb923c;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    /* Image Preview Container */
+    .preview-stage {
+      display: none;
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #090d16;
+      border: 1px solid var(--card-border);
+      min-height: 280px;
+      max-height: 340px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .preview-stage img {
+      width: 100%;
+      height: 300px;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* AI Scanning Laser Animation */
+    .scanner-beam {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #f97316, #ec4899, transparent);
+      box-shadow: 0 0 18px 4px rgba(249, 115, 22, 0.75);
+      animation: scanMove 1.6s ease-in-out infinite;
+      z-index: 3;
+    }
+
+    @keyframes scanMove {
+      0% { top: 6%; opacity: 0.4; }
+      50% { top: 92%; opacity: 1; }
+      100% { top: 6%; opacity: 0.4; }
+    }
+
+    .image-meta-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.85rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--card-border);
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .btn-change {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: none;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-change:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    /* Action Button */
+    .btn-predict {
+      margin-top: 1.25rem;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #f97316 0%, #ec4899 100%);
+      color: white;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.08rem;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      box-shadow: 0 12px 24px -6px rgba(244, 63, 94, 0.45);
+      transition: all 0.2s ease;
+    }
+
+    .btn-predict:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px -6px rgba(244, 63, 94, 0.65);
+    }
+
+    .btn-predict:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Right Panel: Prediction Results */
+    .empty-result-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--text-secondary);
+      border: 1px dashed rgba(148, 163, 184, 0.18);
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.35);
+    }
+
+    .empty-result-state .illustration {
+      font-size: 3.2rem;
+      margin-bottom: 0.85rem;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+    }
+
+    .empty-result-state h4 {
+      color: #e2e8f0;
+      font-size: 1.02rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .empty-result-state p {
+      font-size: 0.85rem;
+      max-width: 280px;
+      line-height: 1.5;
+    }
+
+    /* Active Result Content */
+    .result-showcase {
+      display: none;
+      flex-direction: column;
+      gap: 1.25rem;
+      animation: popIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .animal-banner {
+      border-radius: 20px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .animal-banner.cat-theme {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.25) 0%, rgba(251, 146, 60, 0.2) 100%);
+      border-color: rgba(244, 63, 94, 0.4);
+    }
+
+    .animal-banner.dog-theme {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(6, 182, 212, 0.2) 100%);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    .animal-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .animal-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.65);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.6rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .animal-title-group span.tag {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      color: #cbd5e1;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .animal-title-group h2 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2rem;
+      line-height: 1.1;
+    }
+
+    .animal-title-group p {
+      font-size: 0.83rem;
+      color: #e2e8f0;
+      margin-top: 0.25rem;
+      opacity: 0.9;
+    }
+
+    /* Circular Confidence Gauge */
+    .gauge-box {
+      position: relative;
+      width: 78px;
+      height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .gauge-svg {
+      width: 78px;
+      height: 78px;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 7;
+    }
+
+    .gauge-Value {
+      fill: none;
+      stroke: #fff;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-dasharray: 201;
+      stroke-dashoffset: 201;
+      transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .gauge-text {
+      position: absolute;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* Probability Breakdown Bars */
+    .prob-section {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .prob-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+    }
+
+    .prob-track {
+      width: 100%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .prob-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .prob-fill.cat {
+      background: linear-gradient(90deg, var(--cat-primary), var(--cat-secondary));
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.5);
+    }
+
+    .prob-fill.dog {
+      background: linear-gradient(90deg, var(--dog-primary), var(--dog-secondary));
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+    }
+
+    /* Recent Predictions History */
+    .history-section {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .history-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      margin-bottom: 0.65rem;
+    }
+
+    .history-list {
+      display: flex;
+      gap: 0.65rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+
+    .history-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.65rem 0.35rem 0.35rem;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--card-border);
+      flex-shrink: 0;
+      font-size: 0.78rem;
+    }
+
+    .history-chip img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .error-banner {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-paws"></div>
+
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-logo">🐾</div>
+      <div class="brand-text">
+        <h1>PawVision AI</h1>
+        <p>Deep Learning Cat & Dog Recognition Studio</p>
+      </div>
+    </div>
+
+    <div class="status-pill">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Connecting to PyTorch Engine...</span>
+    </div>
+  </header>
+
+  <!-- Main Two-Column Studio -->
+  <main class="main-grid">
+    <!-- Left Column: Upload & Image Preview -->
+    <section class="glass-card">
+      <div class="card-title">
+        <span>📸 Pet Photo Studio</span>
+        <span class="sub">224×224 CNN Input</span>
+      </div>
+
+      <!-- Dropzone -->
+      <div class="dropzone" id="uploadZone">
+        <div class="mascot-row">
+          <div class="mascot-bubble cat">🐱</div>
+          <div class="mascot-bubble dog">🐶</div>
+        </div>
+        <h3>Drop your pet photo here</h3>
+        <p>or <span class="browse-highlight">browse from your device</span></p>
+        <p style="font-size: 0.76rem; margin-top: 0.6rem; opacity: 0.7;">Supports JPG, PNG, WEBP</p>
+        <input type="file" id="fileInput" accept="image/*" />
+      </div>
+
+      <!-- Image Preview Stage -->
+      <div class="preview-stage" id="previewStage">
+        <div class="scanner-beam" id="scannerBeam"></div>
+        <img id="previewImage" alt="Pet preview" />
+      </div>
+
+      <div class="image-meta-bar" id="imageMetaBar">
+        <span id="fileNameText">photo.jpg</span>
+        <button class="btn-change" id="changePhotoBtn" type="button">Change Photo</button>
+      </div>
+
+      <button class="btn-predict" id="predictBtn" disabled>
+        <span>✨ Identify Animal</span>
+      </button>
+
+      <div class="error-banner" id="errorMsg"></div>
+    </section>
+
+    <!-- Right Column: AI Diagnosis & Confidence -->
+    <section class="glass-card">
+      <div class="card-title">
+        <span>🧠 AI Prediction Result</span>
+        <span class="sub" id="inferenceBadge">Ready</span>
+      </div>
+
+      <!-- Empty Placeholder State -->
+      <div class="empty-result-state" id="emptyState">
+        <div class="illustration">🐕‍🦺 🐈</div>
+        <h4>Waiting for a Pet Photo</h4>
+        <p>Upload a picture of a cat or dog on the left and click <strong>Identify Animal</strong> to see the neural network's confidence breakdown.</p>
+      </div>
+
+      <!-- Active Prediction Result -->
+      <div class="result-showcase" id="resultShowcase">
+        <div class="animal-banner cat-theme" id="animalBanner">
+          <div class="animal-info">
+            <div class="animal-avatar" id="animalAvatar">🐱</div>
+            <div class="animal-title-group">
+              <span class="tag">Detected Species</span>
+              <h2 id="predictionTitle">It's a Cat!</h2>
+              <p id="predictionSubtitle">High-confidence feline match</p>
+            </div>
+          </div>
+
+          <!-- Circular SVG Confidence Gauge -->
+          <div class="gauge-box">
+            <svg class="gauge-svg" viewBox="0 0 72 72">
+              <circle class="gauge-bg" cx="36" cy="36" r="32"></circle>
+              <circle class="gauge-Value" id="gaugeCircle" cx="36" cy="36" r="32"></circle>
+            </svg>
+            <div class="gauge-text" id="gaugeText">98%</div>
+          </div>
+        </div>
+
+        <!-- Class Probability Bars -->
+        <div class="prob-section">
+          <div>
+            <div class="prob-item-header">
+              <span>🐱 Cat Probability</span>
+              <span id="catProbText">0.00%</span>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill cat" id="catProbBar"></div>
+            </div>
+          </div>
+
+          <div>
+            <div class="prob-item-header">
+              <span>🐶 Dog Probability</span>
+              <span id="dogProbText">0.00%</span>
+            </div>
+            <div class="prob-track">
+              <div class="prob-fill dog" id="dogProbBar"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Session History Strip -->
+        <div class="history-section" id="historySection" style="display: none;">
+          <div class="history-title">Recent Scans</div>
+          <div class="history-list" id="historyList"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const uploadZone = document.getElementById("uploadZone");
+    const fileInput = document.getElementById("fileInput");
+    const previewStage = document.getElementById("previewStage");
+    const previewImage = document.getElementById("previewImage");
+    const scannerBeam = document.getElementById("scannerBeam");
+    const imageMetaBar = document.getElementById("imageMetaBar");
+    const fileNameText = document.getElementById("fileNameText");
+    const changePhotoBtn = document.getElementById("changePhotoBtn");
+    const predictBtn = document.getElementById("predictBtn");
+    const errorMsg = document.getElementById("errorMsg");
+
+    const emptyState = document.getElementById("emptyState");
+    const resultShowcase = document.getElementById("resultShowcase");
+    const animalBanner = document.getElementById("animalBanner");
+    const animalAvatar = document.getElementById("animalAvatar");
+    const predictionTitle = document.getElementById("predictionTitle");
+    const predictionSubtitle = document.getElementById("predictionSubtitle");
+    const gaugeCircle = document.getElementById("gaugeCircle");
+    const gaugeText = document.getElementById("gaugeText");
+    const inferenceBadge = document.getElementById("inferenceBadge");
+
+    const catProbText = document.getElementById("catProbText");
+    const dogProbText = document.getElementById("dogProbText");
+    const catProbBar = document.getElementById("catProbBar");
+    const dogProbBar = document.getElementById("dogProbBar");
+
+    const historySection = document.getElementById("historySection");
+    const historyList = document.getElementById("historyList");
+
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+
+    let selectedFile = null;
+    let currentDataUrl = null;
+
+    async function checkHealth() {
+      try {
+        const res = await fetch("/health");
+        const data = await res.json();
+        if (data.weights_loaded) {
+          statusDot.classList.remove("warn");
+          statusText.textContent = `PyTorch Ready (${data.weights_path}) • ${data.device.toUpperCase()}`;
+        } else {
+          statusDot.classList.add("warn");
+          statusText.textContent = `Untrained weights • Add cat_dog_model.pth`;
+        }
+      } catch {
+        statusDot.classList.add("warn");
+        statusText.textContent = "Backend Offline";
+      }
+    }
+    checkHealth();
+
+    uploadZone.addEventListener("click", () => fileInput.click());
+    changePhotoBtn.addEventListener("click", () => fileInput.click());
+
+    uploadZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      uploadZone.classList.add("dragover");
+    });
+
+    uploadZone.addEventListener("dragleave", () => {
+      uploadZone.classList.remove("dragover");
+    });
+
+    uploadZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove("dragover");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleFile(e.target.files[0]);
+      }
+    });
+
+    function handleFile(file) {
+      selectedFile = file;
+      errorMsg.style.display = "none";
+
+      const sizeKB = (file.size / 1024).toFixed(1);
+      fileNameText.textContent = `${file.name} (${sizeKB} KB)`;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentDataUrl = e.target.result;
+        previewImage.src = currentDataUrl;
+        uploadZone.style.display = "none";
+        previewStage.style.display = "flex";
+        imageMetaBar.style.display = "flex";
+        predictBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    predictBtn.addEventListener("click", async () => {
+      if (!selectedFile) return;
+
+      predictBtn.disabled = true;
+      predictBtn.innerHTML = "<span>🔍 Analyzing Pet Features...</span>";
+      scannerBeam.style.display = "block";
+      inferenceBadge.textContent = "Scanning...";
+      errorMsg.style.display = "none";
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      try {
+        const response = await fetch("/predict", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || "Prediction failed");
+        }
+
+        const isCat = data.prediction === "Cat";
+        animalBanner.className = `animal-banner ${isCat ? "cat-theme" : "dog-theme"}`;
+        animalAvatar.textContent = isCat ? "🐱" : "🐶";
+        predictionTitle.textContent = isCat ? "It's a Cat!" : "It's a Dog!";
+        predictionSubtitle.textContent = isCat
+          ? `Feline features detected with ${data.confidence.toFixed(1)}% certainty`
+          : `Canine features detected with ${data.confidence.toFixed(1)}% certainty`;
+
+        // Animate Circular Gauge (circumference = 2 * pi * 32 ≈ 201)
+        const circumference = 201;
+        const offset = circumference - (data.confidence / 100) * circumference;
+        gaugeText.textContent = `${Math.round(data.confidence)}%`;
+
+        catProbText.textContent = `${data.probabilities.Cat.toFixed(2)}%`;
+        dogProbText.textContent = `${data.probabilities.Dog.toFixed(2)}%`;
+
+        emptyState.style.display = "none";
+        resultShowcase.style.display = "flex";
+        inferenceBadge.textContent = "Completed";
+
+        requestAnimationFrame(() => {
+          gaugeCircle.style.strokeDashoffset = offset;
+          catProbBar.style.width = `${data.probabilities.Cat}%`;
+          dogProbBar.style.width = `${data.probabilities.Dog}%`;
+        });
+
+        // Add to session history strip
+        if (currentDataUrl) {
+          historySection.style.display = "block";
+          const chip = document.createElement("div");
+          chip.className = "history-chip";
+          chip.innerHTML = `
+            <img src="${currentDataUrl}" alt="${data.prediction}" />
+            <div>
+              <div style="font-weight: 700; color: #f8fafc;">${isCat ? "🐱 Cat" : "🐶 Dog"}</div>
+              <div style="color: #94a3b8; font-size: 0.72rem;">${data.confidence.toFixed(1)}%</div>
+            </div>
+          `;
+          historyList.prepend(chip);
+        }
+      } catch (err) {
+        errorMsg.textContent = err.message;
+        errorMsg.style.display = "block";
+        inferenceBadge.textContent = "Error";
+      } finally {
+        scannerBeam.style.display = "none";
+        predictBtn.disabled = false;
+        predictBtn.innerHTML = "<span>✨ Identify Animal</span>";
+      }
+    });
+  </script>
+</body>
+</html>
+

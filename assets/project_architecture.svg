@@ -1,0 +1,296 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19"/>
+      <stop offset="50%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="stage1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#0369a1" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="stage2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#6d28d9" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="stage3Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#047857" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="stage4Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ec4899" stop-opacity="0.1"/>
+    </linearGradient>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#a78bfa"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+    <marker id="arrowOrange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="#fb923c"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="680" rx="18" fill="url(#bgGrad)"/>
+
+  <!-- Header -->
+  <text x="600" y="46" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, Inter, sans-serif" font-size="24" font-weight="700">
+    Cat &amp; Dog Detection — End-to-End System Architecture
+  </text>
+  <text x="600" y="72" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, Inter, sans-serif" font-size="13.5">
+    Modular PyTorch Training Pipeline + FastAPI Real-Time Web Inference Studio (PawVision AI)
+  </text>
+
+  <!-- ================= STAGE 1: DATA & PREPROCESSING ================= -->
+  <rect x="40" y="100" width="250" height="530" rx="16" fill="url(#stage1Grad)" stroke="#38bdf8" stroke-opacity="0.45" stroke-width="1.5"/>
+  <rect x="56" y="116" width="218" height="34" rx="8" fill="#0284c7" fill-opacity="0.35"/>
+  <text x="165" y="138" text-anchor="middle" fill="#7dd3fc" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">
+    1. DATA &amp; PREPROCESSING
+  </text>
+  <text x="165" y="166" text-anchor="middle" fill="#94a3b8" font-family="Consolas, monospace" font-size="11.5">
+    data_preprocessing.py
+  </text>
+
+  <!-- Box 1A: Raw Dataset -->
+  <rect x="60" y="185" width="210" height="86" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-opacity="0.35"/>
+  <text x="165" y="210" text-anchor="middle" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600">
+    📁 Cat &amp; Dog Dataset
+  </text>
+  <text x="165" y="232" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • training_set (Cats / Dogs)
+  </text>
+  <text x="165" y="250" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • test_set (2,023 images)
+  </text>
+
+  <line x1="165" y1="271" x2="165" y2="305" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Box 1B: Transforms -->
+  <rect x="60" y="310" width="210" height="145" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-opacity="0.35"/>
+  <text x="165" y="334" text-anchor="middle" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600">
+    ✨ Torchvision Transforms
+  </text>
+  <text x="165" y="356" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Resize (224 × 224)
+  </text>
+  <text x="165" y="376" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • RandomHorizontalFlip
+  </text>
+  <text x="165" y="396" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • RandomRotation (10°)
+  </text>
+  <text x="165" y="416" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • ColorJitter (0.1, 0.1)
+  </text>
+  <text x="165" y="436" text-anchor="middle" fill="#7dd3fc" font-family="Segoe UI, sans-serif" font-size="11">
+    • ImageNet Normalize
+  </text>
+
+  <line x1="165" y1="455" x2="165" y2="489" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Box 1C: DataLoaders -->
+  <rect x="60" y="494" width="210" height="110" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-opacity="0.35"/>
+  <text x="165" y="520" text-anchor="middle" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600">
+    🔄 PyTorch DataLoaders
+  </text>
+  <text x="165" y="544" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • ImageFolder Mapping
+  </text>
+  <text x="165" y="564" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Batch Size: 32
+  </text>
+  <text x="165" y="584" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Workers: 2 | Shuffle: True
+  </text>
+
+  <!-- Connector Stage 1 -> Stage 2 -->
+  <path d="M 290 548 L 330 548 L 330 245 L 352 245" fill="none" stroke="#a78bfa" stroke-width="2.2" marker-end="url(#arrowPurple)"/>
+
+  <!-- ================= STAGE 2: MODEL & TRAINING ================= -->
+  <rect x="358" y="100" width="265" height="530" rx="16" fill="url(#stage2Grad)" stroke="#a78bfa" stroke-opacity="0.45" stroke-width="1.5"/>
+  <rect x="374" y="116" width="233" height="34" rx="8" fill="#7c3aed" fill-opacity="0.35"/>
+  <text x="490" y="138" text-anchor="middle" fill="#c4b5fd" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">
+    2. MODEL &amp; TRAINING
+  </text>
+  <text x="490" y="166" text-anchor="middle" fill="#94a3b8" font-family="Consolas, monospace" font-size="11.5">
+    model.py &amp; train.py
+  </text>
+
+  <!-- Box 2A: BasicCNN -->
+  <rect x="378" y="185" width="225" height="120" rx="10" fill="#1e293b" stroke="#a78bfa" stroke-opacity="0.4"/>
+  <text x="490" y="210" text-anchor="middle" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600">
+    🧠 BasicCNN Architecture
+  </text>
+  <text x="490" y="232" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • 4 Conv2d Blocks (64→512)
+  </text>
+  <text x="490" y="252" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • ReLU + BatchNorm + MaxPool
+  </text>
+  <text x="490" y="272" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • AdaptiveAvgPool2d (1×1)
+  </text>
+  <text x="490" y="292" text-anchor="middle" fill="#c4b5fd" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Linear (512→256→2)
+  </text>
+
+  <line x1="490" y1="305" x2="490" y2="335" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <!-- Box 2B: Training Loop -->
+  <rect x="378" y="340" width="225" height="130" rx="10" fill="#1e293b" stroke="#a78bfa" stroke-opacity="0.4"/>
+  <text x="490" y="365" text-anchor="middle" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600">
+    ⚡ Training &amp; Validation Loop
+  </text>
+  <text x="490" y="388" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Epochs: 50 | Device: CUDA/CPU
+  </text>
+  <text x="490" y="408" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Loss: CrossEntropyLoss
+  </text>
+  <text x="490" y="428" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Optimizer: Adam (lr=1e-4)
+  </text>
+  <text x="490" y="448" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Weight Decay: 1e-4
+  </text>
+
+  <line x1="490" y1="470" x2="490" y2="500" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <!-- Box 2C: Saved Model Checkpoint -->
+  <rect x="378" y="505" width="225" height="99" rx="10" fill="#2e1065" stroke="#c084fc" stroke-width="1.5"/>
+  <text x="490" y="534" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="13.5" font-weight="700">
+    💾 Trained Weights
+  </text>
+  <text x="490" y="558" text-anchor="middle" fill="#e9d5ff" font-family="Consolas, monospace" font-size="12">
+    cat_dog_model.pth
+  </text>
+  <text x="490" y="580" text-anchor="middle" fill="#c4b5fd" font-family="Segoe UI, sans-serif" font-size="11">
+    PyTorch state_dict (~6.5 MB)
+  </text>
+
+  <!-- ================= STAGE 3: EVALUATION & ANALYTICS ================= -->
+  <rect x="660" y="100" width="240" height="250" rx="16" fill="url(#stage3Grad)" stroke="#34d399" stroke-opacity="0.45" stroke-width="1.5"/>
+  <rect x="676" y="116" width="208" height="34" rx="8" fill="#059669" fill-opacity="0.35"/>
+  <text x="780" y="138" text-anchor="middle" fill="#6ee7b7" font-family="Segoe UI, sans-serif" font-size="12.5" font-weight="700">
+    3. EVALUATION &amp; METRICS
+  </text>
+  <text x="780" y="166" text-anchor="middle" fill="#94a3b8" font-family="Consolas, monospace" font-size="11.5">
+    predict.py
+  </text>
+
+  <rect x="678" y="182" width="204" height="148" rx="10" fill="#1e293b" stroke="#34d399" stroke-opacity="0.35"/>
+  <text x="780" y="208" text-anchor="middle" fill="#f1f5f9" font-family="Segoe UI, sans-serif" font-size="12.5" font-weight="600">
+    📊 Performance Artifacts
+  </text>
+  <text x="780" y="232" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Accuracy&amp;loss.jpg
+  </text>
+  <text x="780" y="252" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Confusion matrix.jpg
+  </text>
+  <text x="780" y="272" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • test_predictions.csv
+  </text>
+  <text x="780" y="294" text-anchor="middle" fill="#6ee7b7" font-family="Segoe UI, sans-serif" font-size="11.5" font-weight="600">
+    • Test Accuracy: 94.71%
+  </text>
+  <text x="780" y="314" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11">
+    • Top-5 Error Visualization
+  </text>
+
+  <!-- Connector Stage 2 -> Stage 3 -->
+  <path d="M 603 405 L 635 405 L 635 255 L 654 255" fill="none" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- ================= STAGE 4: FASTAPI WEB APPLICATION ================= -->
+  <rect x="660" y="375" width="500" height="255" rx="16" fill="url(#stage4Grad)" stroke="#fb923c" stroke-opacity="0.5" stroke-width="1.5"/>
+  <rect x="676" y="391" width="468" height="34" rx="8" fill="#ea580c" fill-opacity="0.35"/>
+  <text x="910" y="413" text-anchor="middle" fill="#fdba74" font-family="Segoe UI, sans-serif" font-size="13" font-weight="700">
+    4. FASTAPI WEB APPLICATION (PawVision AI Studio)
+  </text>
+
+  <!-- Connector Weights -> FastAPI -->
+  <path d="M 603 555 L 654 555" fill="none" stroke="#fb923c" stroke-width="2.2" marker-end="url(#arrowOrange)"/>
+
+  <!-- FastAPI Backend Box -->
+  <rect x="678" y="440" width="215" height="168" rx="10" fill="#1e293b" stroke="#fb923c" stroke-opacity="0.4"/>
+  <text x="785" y="465" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600">
+    ⚙️ FastAPI Backend (app.py)
+  </text>
+  <text x="785" y="490" text-anchor="middle" fill="#cbd5e1" font-family="Consolas, monospace" font-size="11">
+    GET  /          (Web UI)
+  </text>
+  <text x="785" y="510" text-anchor="middle" fill="#cbd5e1" font-family="Consolas, monospace" font-size="11">
+    GET  /health    (Status)
+  </text>
+  <text x="785" y="530" text-anchor="middle" fill="#fdba74" font-family="Consolas, monospace" font-size="11" font-weight="600">
+    POST /predict   (Inference)
+  </text>
+  <text x="785" y="556" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11">
+    PIL Image → test_transform
+  </text>
+  <text x="785" y="576" text-anchor="middle" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="11">
+    BasicCNN → Softmax Probabilities
+  </text>
+
+  <!-- Bidirectional Arrow FastAPI <-> Frontend -->
+  <line x1="895" y1="510" x2="925" y2="510" stroke="#fb923c" stroke-width="2" marker-end="url(#arrowOrange)"/>
+  <line x1="925" y1="535" x2="895" y2="535" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- Frontend Web Studio Box -->
+  <rect x="930" y="440" width="212" height="168" rx="10" fill="#1e293b" stroke="#f472b6" stroke-opacity="0.4"/>
+  <text x="1036" y="465" text-anchor="middle" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="13" font-weight="600">
+    🌐 Web UI (static/index.html)
+  </text>
+  <text x="1036" y="490" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Drag &amp; Drop Pet Photo
+  </text>
+  <text x="1036" y="512" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Live Laser Scan Preview
+  </text>
+  <text x="1036" y="534" text-anchor="middle" fill="#f9a8d4" font-family="Segoe UI, sans-serif" font-size="11.5" font-weight="600">
+    • 🐱 Cat vs 🐶 Dog Theme
+  </text>
+  <text x="1036" y="556" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Circular Confidence Gauge
+  </text>
+  <text x="1036" y="578" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Session History Strip
+  </text>
+
+  <!-- Config Bar at Top Right -->
+  <rect x="925" y="100" width="235" height="250" rx="16" fill="#1e293b" fill-opacity="0.7" stroke="#64748b" stroke-opacity="0.4" stroke-width="1.5"/>
+  <rect x="941" y="116" width="203" height="34" rx="8" fill="#334155"/>
+  <text x="1042" y="138" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI, sans-serif" font-size="12.5" font-weight="700">
+    ⚙️ CONFIGURATION &amp; CLI
+  </text>
+  <text x="1042" y="168" text-anchor="middle" fill="#38bdf8" font-family="Consolas, monospace" font-size="11.5">
+    config.py &amp; main.py
+  </text>
+  <text x="1042" y="196" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Centralized Hyperparameters
+  </text>
+  <text x="1042" y="218" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Seed: 42 (Reproducible)
+  </text>
+  <text x="1042" y="240" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Auto CUDA / CPU Detection
+  </text>
+  <text x="1042" y="262" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI, sans-serif" font-size="11.5">
+    • Modular CLI Entrypoints:
+  </text>
+  <text x="1042" y="284" text-anchor="middle" fill="#94a3b8" font-family="Consolas, monospace" font-size="11">
+    python main.py
+  </text>
+  <text x="1042" y="302" text-anchor="middle" fill="#94a3b8" font-family="Consolas, monospace" font-size="11">
+    python train.py / predict.py
+  </text>
+  <text x="1042" y="320" text-anchor="middle" fill="#fdba74" font-family="Consolas, monospace" font-size="11">
+    python app.py (Port 8000)
+  </text>
+</svg>
+

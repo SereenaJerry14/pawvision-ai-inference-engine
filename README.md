@@ -1,4 +1,4 @@
-# 🐾 Cat & Dog Detection — PyTorch CNN & FastAPI Web App
+# 🐾 PawVision AI — End-to-End Image Classification & Real-Time Inference Pipeline.
 
 An end-to-end Deep Learning image classification project that detects **Cats vs. Dogs** using a custom 4-block Convolutional Neural Network (`BasicCNN`) built with PyTorch, paired with an interactive **FastAPI** web application (**PawVision AI**).
 
